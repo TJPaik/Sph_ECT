@@ -86,6 +86,7 @@ for i, el in enumerate(results):
 nresults = np.asarray(nresults)
 assert len(error_indices2) == 0
 np.save('Anims/euler_curves/original.npy', nresults)
+
 # %%
 # With random rotation & translation
 for j in range(50):
@@ -95,4 +96,3 @@ for j in range(50):
         for i, (v, f) in enumerate(vfs_original) if i not in error_indices1))
     assert results.shape == nresults.shape
     np.save(f'Anims/euler_curves/random_{j}.npy', results)
-# %%
