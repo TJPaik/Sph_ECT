@@ -1,4 +1,5 @@
-# %%
+# Implementation of
+# Fast and Scalable Complex Network Descriptor Using PageRank and Persistent Homology
 from collections import Counter
 from pathlib import Path
 
