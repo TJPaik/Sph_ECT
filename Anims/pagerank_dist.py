@@ -34,6 +34,9 @@ for i, (v, f) in enumerate(vfs_original):
 print(Counter(folder_names))
 print(Counter(folder_names[error_indices1]))
 
+label = np.asarray([el for i, el in enumerate(folder_names) if i not in error_indices1])
+np.save('Anims/label.npy', label)
+
 
 # %%
 def get_persistence(v, f):
@@ -78,7 +81,6 @@ for i in range(len(pss)):
 np.save('Anims/pagerank_dist/dm0.npy', dm0)
 np.save('Anims/pagerank_dist/dm1.npy', dm1)
 # %%
-# %%
 ####################################################################################################
 dm0 = np.load('Anims/pagerank_dist/dm0.npy')
 dm1 = np.load('Anims/pagerank_dist/dm1.npy')
@@ -102,9 +104,9 @@ def tsne_visualize(dm, label):
 # %%
 plt.figure()
 plt.title('dm_0')
-tsne_visualize(dm0, np.asarray([el for i, el in enumerate(folder_names) if i not in error_indices1]))
+tsne_visualize(dm0, label)
 # %%
 plt.figure()
 plt.title('dm_1')
-tsne_visualize(dm1, np.asarray([el for i, el in enumerate(folder_names) if i not in error_indices1]))
+tsne_visualize(dm1, label)
 # %%%
