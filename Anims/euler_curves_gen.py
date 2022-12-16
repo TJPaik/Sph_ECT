@@ -89,10 +89,19 @@ np.save('Anims/euler_curves/original.npy', nresults)
 
 # %%
 # With random rotation & translation
-for j in range(50):
+for j in range(4):
     print('\t', j, end='')
     results = np.asarray(Parallel(n_jobs=26, verbose=9)(
         delayed(get_euler_curve)(v @ special_ortho_group.rvs(3), f)
         for i, (v, f) in enumerate(vfs_original) if i not in error_indices1))
     assert results.shape == nresults.shape
     np.save(f'Anims/euler_curves/random_{j}.npy', results)
+
+# %%
+# With random rotation & translation with flip
+for j in range(4):
+    print('\t', j, end='')
+    results = np.asarray(Parallel(n_jobs=26, verbose=9)(
+        delayed(get_euler_curve)(v @ np.asarray([[-1, 0, 0], [0, 1, 0], [0, 0, 1]]) @ special_ortho_group.rvs(3), f)
+        for i, (v, f) in enumerate(vfs_original) if i not in error_indices1))
+    np.save(f'Anims/euler_curves/random_{j}_flip.npy', results)

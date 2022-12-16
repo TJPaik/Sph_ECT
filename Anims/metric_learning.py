@@ -1,5 +1,6 @@
 # %%
 import matplotlib.pyplot as plt
+from itertools import chain
 import numpy as np
 import torch
 from icosphere import icosphere
@@ -14,6 +15,8 @@ from Anims.gnn_model import Model
 directions = torch.asarray([el for el in icosphere(7)][0])
 ec_data = torch.from_numpy(np.load(f'Anims/euler_curves/original.npy'))
 ec_data_random = [torch.from_numpy(np.load(f'Anims/euler_curves/random_{i}.npy')) for i in tqdm(range(4))]
+ec_data_random_flip = [torch.from_numpy(np.load(f'Anims/euler_curves/random_{i}_flip.npy')) for i in tqdm(range(4))]
+# %%
 label = np.load('Anims/label.npy')
 label_unique = np.unique(label).tolist()
 label_n = np.asarray([label_unique.index(el) for el in label])
@@ -45,6 +48,7 @@ dl = DataLoader(ds, 8, True)
 ds_total = TensorDataset(torch.arange(len(ec_data)))
 dl_total = DataLoader(ds_total, 8, False)
 # %%
+# Train
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
 schedular = optim.lr_scheduler.StepLR(optimizer, step_size=150, gamma=0.05)
 model.train()
@@ -86,8 +90,9 @@ plt.tight_layout()
 plt.show()
 plt.close()
 # %%
+# Random Rotation / translation / flip
 random_output = []
-for r_data in ec_data_random:
+for r_data in chain(ec_data_random, ec_data_random_flip):
     model.eval()
     with torch.no_grad():
         outputs = []
@@ -100,7 +105,7 @@ for r_data in ec_data_random:
     )
 
 # %%
-fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+fig, axs = plt.subplots(4, 2, figsize=(10, 20))
 for j in range(len(random_output)):
     for el in label_unique:
         axs[j // 2][j % 2].scatter(*random_output[j][label == el].T, label=el, s=20, alpha=0.8)
@@ -109,3 +114,4 @@ plt.tight_layout()
 # plt.savefig('results/semi_result_r3.png', dpi=300)
 plt.show()
 plt.close()
+# %%
