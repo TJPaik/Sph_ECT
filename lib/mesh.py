@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
 import numpy as np
+from scipy.stats import special_ortho_group
 
 
 def remove_duplicate(v: np.ndarray, f: np.ndarray):
@@ -24,3 +25,7 @@ def plot(vertices, faces, init1=None, init2=None, size=None):
 
     ax.view_init(init1, init2)
 
+
+def randomize_vertices(v, upper_limit):
+    tmp = upper_limit - np.max(np.linalg.norm(v, axis=1))
+    return v @ special_ortho_group.rvs(3) + (np.random.random(3) / np.sqrt(3)) * tmp
